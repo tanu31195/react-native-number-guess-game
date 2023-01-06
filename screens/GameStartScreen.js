@@ -1,17 +1,31 @@
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View, Alert } from "react-native";
 import { useState } from "react";
-import PrimaryButton from "../components/PrimaryButton";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import colors from "../constants/colors";
 
-export default function GameStartScreen(props) {
+export default function GameStartScreen({onPickedNumber}) {
   const [enteredNumber, setEnteredNumber] = useState("");
 
   function numberInputHandler(enteredText) {
     setEnteredNumber(enteredText);
   }
 
-  function confirmInputHandler() {
-    
+  function resetInputHandler() {
+    setEnteredNumber('');
+  }
 
+  function confirmInputHandler() {
+    const chosenNumber = parseInt(enteredNumber);
+
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert("Invalid number", "Please enter a number between 1 and 99", [
+        { text: "Okay", style: 'destructive', onPress: resetInputHandler },
+      ]);
+      return;
+    }
+
+    console.log('Valid Number')
+    onPickedNumber(chosenNumber);
   }
 
   return (
@@ -26,7 +40,7 @@ export default function GameStartScreen(props) {
       />
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonContainer}>
-          <PrimaryButton>Reset</PrimaryButton>
+          <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
         </View>
         <View style={styles.buttonContainer}>
           <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
@@ -43,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 100,
     marginHorizontal: 20,
-    backgroundColor: "#3b021f",
+    backgroundColor: colors.primary8,
     borderRadius: 10,
     elevation: 4,
     shadowColor: "#000",
@@ -56,9 +70,9 @@ const styles = StyleSheet.create({
     width: 75,
     fontSize: 30,
     fontWeight: "bold",
-    borderColor: "#ddb25f",
+    borderColor: colors.accent5,
     borderBottomWidth: 5,
-    color: "#ddb52f",
+    color: colors.accent5,
     marginVertical: 10,
     textAlign: "center",
   },
