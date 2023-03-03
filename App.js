@@ -57,6 +57,7 @@ export default function App() {
   }
 
   if (!isAuthenticated) {
+    // TODO: Add proper component
     return (
       <SafeAreaView>
         <Text>Access denied</Text>
