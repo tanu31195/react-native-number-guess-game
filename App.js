@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { SafeAreaView, StyleSheet, ImageBackground } from "react-native";
+import { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, ImageBackground, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 // import * as SplashScreen from 'expo-splash-screen';
+import * as LocalAuthentication from "expo-local-authentication";
 
 import GameStartScreen from "./screens/GameStartScreen";
 import GameScreen from "./screens/GameScreen";
@@ -16,11 +17,24 @@ export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
   const [guessRounds, setGuessRounds] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
+
+  useEffect(() => {
+    async function authenticate() {
+      const result = await LocalAuthentication.authenticateAsync({
+        cancelLabel: "CANCEL",
+        promptMessage: "Random Number Guesser",
+        fallbackLabel: "Enter phone password",
+      });
+      setIsAuthenticated(result.success);
+    }
+    authenticate();
+  }, []);
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -40,6 +54,14 @@ export default function App() {
   function startNewGameHandler() {
     setUserNumber(null);
     setGuessRounds(0);
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <SafeAreaView>
+        <Text>Access denied</Text>
+      </SafeAreaView>
+    );
   }
 
   let screen = <GameStartScreen onPickedNumber={pickedNumberHandler} />;
