@@ -10,6 +10,7 @@ import GameStartScreen from "./screens/GameStartScreen";
 import GameScreen from "./screens/GameScreen";
 import colors from "./constants/colors";
 import GameOverScreen from "./screens/GameOverScreen";
+import HangmanGame from "./screens/HangmanGame";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -94,7 +95,8 @@ export default function App() {
         style={styles.rootContainer}
         imageStyle={styles.backgroundImage}
       >
-        <SafeAreaView style={styles.rootContainer}>{screen}</SafeAreaView>
+        {/* <SafeAreaView style={styles.rootContainer}>{screen}</SafeAreaView> */}
+        <SafeAreaView style={styles.rootContainer}><HangmanGame /></SafeAreaView>
       </ImageBackground>
     </LinearGradient>
   );
